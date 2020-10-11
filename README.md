@@ -8,7 +8,7 @@
 [1]: https://github.com/TheManta/RB.Assemblies/workflows/Publish/badge.svg
 [2]: https://github.com/TheManta/RB.Assemblies/actions "Build Status"
 [3]: https://img.shields.io/badge/-DOWNLOAD-success
-[4]: https://github.com/TheManta/RB.Assemblies/releases/latest "Download"
+[4]: https://github.com/TheManta/RB.Assemblies/packages "Download"
 
 **RB.Assemblies** is a NuGet package release of key [Reborn Buddy][5] assemblies, stripped of their code to function only as reference assemblies.  This simplifies third party development and automated builds by allowing the use of package managers instead of committing complete (and probably outdated) assemblies directly to repo.
 
@@ -20,7 +20,7 @@ These assemblies have been stripped of their code, leaving only the API behind -
 
 To use this package,
 
-  1. Enable the custom GitHub package source.
+  1. Enable the custom GitHub Packages source.
   2. Install the package for your project.
 
 ### Enabling Package Source
@@ -32,7 +32,9 @@ On GitHub,
   1. Visit then [Personal Access Tokens][6] page.
   2. Click "Generate New Token" in the top right.
   3. Set `Note` to "GitHub Packages Read-Only"
-  4. Select scopes: `repo`, `read:packages`.
+  4. Select scopes:
+     * `repo`
+     * `read:packages`
 
 ![Scopes][7]
 
@@ -61,11 +63,11 @@ In Visual Studio,
   Install-Package "RB.Assemblies" -Source "GitHub/TheManta" -Project "YOUR_PROJECT_HERE"
   ```
 
-To prevent the reference assemblies from being copied to the output folder on build,
+To prevent the reference assemblies from being unnecessarily copied to the output folder on build,
 
   1. In the Solution Explorer, browse to the project's references.
   2. Set `Copy Local: False` for these references:
      * GreyMagic
      * RebornBuddy
 
-These files are unnecessary since Reborn Buddy loads the full versions on its own.
+Reborn Buddy will locate and load the full versions on its own.  Nothing from this package needs to be distributed with your addon.
