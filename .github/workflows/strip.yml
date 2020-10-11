@@ -1,13 +1,17 @@
 name: "Publish"
 on:
+  push:
   schedule:
-    -cron: "*/15 * * * *"
+    - cron: "*/15 * * * *"
 
 jobs:
   strip:
     name: "Strip and Publish"
     runs-on: "windows-latest"
     steps:
+      - name: "Checkout Repository"
+        uses: "actions/checkout@v2"
+      
       - name: "Restore Previous ETag"
         # Errors when ETags folder is missing, which is okay
         # Implies this is first run or no ETags previously stored
@@ -44,26 +48,22 @@ jobs:
           unzip -p RebornBuddy64.zip GreyMagic.dll > extracted/GreyMagic.dll
       
       - name: "Download Assembly Stripper"
-        uses: dsaltares/fetch-gh-release-asset@master
+        uses: "robinraju/release-downloader@v1"
         with:
-          repo: "TheManta/AssemblyStripper"
-          version: "tags/v0.1.0"
-          file: "AssemblyStripper-v0.1.0.zip"
-          token: "${{ secrets.GITHUB_TOKEN }}"
+          repository: "TheManta/AssemblyStripper"
+          tag: "v0.1.0"
+          fileName: "AssemblyStripper-v0.1.0.zip"
       
       - name: "Extract Assembly Stripper"
         shell: "bash"
         run: |
-          unzip -p 'AssemblyStripper-v0.1.0.zip'
+          unzip AssemblyStripper-v0.1.0.zip
       
       - name: "Strip Assemblies"
         # Run Assembly Stripper on chosen files.  Outputs to extracted/Stripped/
         shell: "bash"
         run: |
-          AssemblyStripper.exe extracted
-      
-      - name: "Checkout Repository"
-        uses: "actions/checkout@v2"
+          ./AssemblyStripper/AssemblyStripper.exe extracted
       
       - name: Install NuGet
         uses: nuget/setup-nuget@v1
@@ -80,7 +80,7 @@ jobs:
         run: |
           $version = [System.Reflection.Assembly]::LoadFrom("$(pwd)/extracted/Stripped/RebornBuddy.exe").GetName().Version.ToString()
           nuget pack -BasePath "extracted/Stripped" -Version $version
-          nuget push **/*.nupkg --skip-duplicate --no-symbols true
+          nuget push **/*.nupkg -SkipDuplicate -NoSymbols -Source "GitHub/TheManta"
 
       - name: "Store ETags"
         # Store download ETags for comparison next run
