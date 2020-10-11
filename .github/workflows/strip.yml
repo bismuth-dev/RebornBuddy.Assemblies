@@ -1,0 +1,91 @@
+name: "Publish"
+on:
+  schedule:
+    -cron: "*/15 * * * *"
+
+jobs:
+  strip:
+    name: "Strip and Publish"
+    runs-on: "windows-latest"
+    steps:
+      - name: "Restore Previous ETag"
+        # Errors when ETags folder is missing, which is okay
+        # Implies this is first run or no ETags previously stored
+        continue-on-error: true
+        uses: "actions/download-artifact@v2"
+        with:
+          name: "etags"
+      
+      - name: "Download if Newer"
+        # Use etags to determine if file is newer and should be downloaded
+        shell: "bash"
+        run: |
+          mkdir -p etags
+          curl -L --etag-compare etags/RebornBuddy64.etag --etag-save etags/RebornBuddy64.etag http://updates.buddyauth.com/GetNewest?filter=Rebornbuddy64 -o RebornBuddy64.zip
+      
+      - name: "Verify Downloaded"
+        # If file wasn't newer, it wasn't downloaded and shouldn't exist on disk
+        id: check_download
+        uses: andstor/file-existence-action@v1
+        with:
+          files: "RebornBuddy64.zip"
+      
+      - name: "Cancel if Older"
+        # If no new download to process, cancel here
+        uses: andymckay/cancel-action@0.2
+        if: steps.check_download.outputs.files_exists == 'false'
+
+      - name: "Unzip Download"
+        # Extract and stage select files for stripping
+        shell: "bash"
+        run: |
+          mkdir -p extracted
+          unzip -p RebornBuddy64.zip RebornBuddy.exe > extracted/RebornBuddy.exe
+          unzip -p RebornBuddy64.zip GreyMagic.dll > extracted/GreyMagic.dll
+      
+      - name: "Download Assembly Stripper"
+        uses: dsaltares/fetch-gh-release-asset@master
+        with:
+          repo: "TheManta/AssemblyStripper"
+          version: "tags/v0.1.0"
+          file: "AssemblyStripper-v0.1.0.zip"
+          token: "${{ secrets.GITHUB_TOKEN }}"
+      
+      - name: "Extract Assembly Stripper"
+        shell: "bash"
+        run: |
+          unzip -p 'AssemblyStripper-v0.1.0.zip'
+      
+      - name: "Strip Assemblies"
+        # Run Assembly Stripper on chosen files.  Outputs to extracted/Stripped/
+        shell: "bash"
+        run: |
+          AssemblyStripper.exe extracted
+      
+      - name: "Checkout Repository"
+        uses: "actions/checkout@v2"
+      
+      - name: Install NuGet
+        uses: nuget/setup-nuget@v1
+      
+      - name: Configure NuGet Sources
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          nuget sources add -Name "GitHub/TheManta" -Source "https://nuget.pkg.github.com/TheManta/index.json" -UserName "${Env:GITHUB_ACTOR}" -Password "${Env:GITHUB_TOKEN}"
+      
+      - name: "NuGet Pack and Push"
+        # Force package version to EXE's version before uploading
+        shell: "powershell"
+        run: |
+          $version = [System.Reflection.Assembly]::LoadFrom("$(pwd)/extracted/Stripped/RebornBuddy.exe").GetName().Version.ToString()
+          nuget pack -BasePath "extracted/Stripped" -Version $version
+          nuget push **/*.nupkg --skip-duplicate --no-symbols true
+
+      - name: "Store ETags"
+        # Store download ETags for comparison next run
+        # This is at the very end so a version isn't skipped if something broke after saving
+        uses: "actions/upload-artifact@v2"
+        with:
+          name: "etags"
+          path: etags
