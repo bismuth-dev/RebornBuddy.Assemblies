@@ -1,16 +1,16 @@
-# [RB.Assemblies][0]
+# [RebornBuddy.Assemblies][0]
 
-[0]: https://github.com/TheManta/RB.Assemblies
+[0]: https://github.com/TheManta/RebornBuddy.Assemblies
 
 [![Build Status][1]][2]
 [![Download][3]][4]
 
-[1]: https://github.com/TheManta/RB.Assemblies/workflows/Publish/badge.svg
-[2]: https://github.com/TheManta/RB.Assemblies/actions "Build Status"
+[1]: https://github.com/TheManta/RebornBuddy.Assemblies/workflows/Publish/badge.svg
+[2]: https://github.com/TheManta/RebornBuddy.Assemblies/actions "Build Status"
 [3]: https://img.shields.io/badge/-DOWNLOAD-success
-[4]: https://github.com/TheManta/RB.Assemblies/packages "Download"
+[4]: https://github.com/TheManta/RebornBuddy.Assemblies/packages "Download"
 
-**RB.Assemblies** is a NuGet package release of key [Reborn Buddy][5] assemblies, stripped of their code to function only as reference assemblies.  This simplifies third party development and automated builds by allowing the use of package managers instead of committing complete (and probably outdated) assemblies directly to repo.
+**RebornBuddy.Assemblies** is a NuGet package release of key [Reborn Buddy][5] assemblies, stripped of their code to function only as reference assemblies.  This simplifies third party development and automated builds by allowing the use of package managers instead of committing complete (and probably outdated) assemblies directly to repo.
 
 These assemblies have been stripped of their code, leaving only the API behind -- **they cannot be executed**.  This project is only for third party developer convenience, not end users.  Please support the official release on the [Reborn Buddy][5] website.
 
@@ -39,7 +39,7 @@ On GitHub,
 ![Scopes][7]
 
   5. Click "Generate Token" at the bottom.
-  6. Copy the new token.  
+  6. Copy the new token.
 
 [6]: https://github.com/settings/tokens "Personal Access Tokens"
 [7]: https://i.imgur.com/F6T8hI2.png "Example"
@@ -60,7 +60,7 @@ In Visual Studio,
   1. Open Tools > NuGet Package Manager > Package Manager Console
   2. In the PM Console, run the following command after editing the project name:
   ```powershell
-  Install-Package "RB.Assemblies" -Source "GitHub/TheManta" -Project "YOUR_PROJECT_HERE"
+  Install-Package "RebornBuddy.Assemblies" -Source "GitHub/TheManta" -Project "YOUR_PROJECT_HERE"
   ```
 
 To prevent the reference assemblies from being unnecessarily copied to the output folder on build,

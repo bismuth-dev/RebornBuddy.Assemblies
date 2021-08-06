@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package >
   <metadata>
-    <id>RB.Assemblies</id>
+    <id>RebornBuddy.Assemblies</id>
     <version>$version$</version>
     <authors>mastahg, Bossland GmbH</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <projectUrl>https://github.com/TheManta/RB.Assemblies</projectUrl>
-    <repository type="git" url="https://github.com/TheManta/RB.Assemblies" />
+    <projectUrl>https://github.com/TheManta/RebornBuddy.Assemblies</projectUrl>
+    <repository type="git" url="https://github.com/TheManta/RebornBuddy.Assemblies" />
     <description>Stripped reference assemblies for Reborn Buddy.</description>
     <tags>reborn-buddy ffxiv ff14</tags>
     <dependencies>
