@@ -16,7 +16,15 @@ These assemblies have been stripped of their code, leaving only the API behind -
 
 [5]: https://www.rebornbuddy.com/ "Reborn Buddy"
 
-## Usage
+## Usage via NuGet
+
+[RebornBuddy.Assemblies](https://www.nuget.org/packages/RebornBuddy.Assemblies) is available via traditional NuGet.org -- just search for `RebornBuddy.Assemblies` in your package manager, or run the following command in your project directory:
+
+```shell
+dotnet add package RebornBuddy.Assemblies
+```
+
+## Usage via GitHub Packages
 
 To use this package,
 
