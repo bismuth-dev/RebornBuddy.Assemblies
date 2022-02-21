@@ -5,8 +5,8 @@
     <version>$version$</version>
     <authors>mastahg, Bossland GmbH</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <projectUrl>https://github.com/TheManta/RebornBuddy.Assemblies</projectUrl>
-    <repository type="git" url="https://github.com/TheManta/RebornBuddy.Assemblies" />
+    <projectUrl>https://github.com/bismuth-dev/RebornBuddy.Assemblies</projectUrl>
+    <repository type="git" url="https://github.com/bismuth-dev/RebornBuddy.Assemblies" />
     <description>Stripped reference assemblies for Reborn Buddy.</description>
     <tags>reborn-buddy ffxiv ff14</tags>
     <dependencies>
