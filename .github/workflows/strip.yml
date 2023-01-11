@@ -10,13 +10,13 @@ jobs:
     runs-on: "windows-latest"
     steps:
       - name: "Checkout Repository"
-        uses: "actions/checkout@v2"
+        uses: "actions/checkout@v3"
 
       - name: "Restore Previous ETag"
         # Errors when ETags folder is missing, which is okay
         # Implies this is first run or no ETags previously stored
         continue-on-error: true
-        uses: "actions/download-artifact@v2"
+        uses: "actions/download-artifact@v3"
         with:
           name: "etags"
 
@@ -30,13 +30,13 @@ jobs:
       - name: "Verify Downloaded"
         # If file wasn't newer, it wasn't downloaded and shouldn't exist on disk
         id: check_download
-        uses: andstor/file-existence-action@v1
+        uses: andstor/file-existence-action@v2
         with:
           files: "RebornBuddy64.zip"
 
       - name: "Cancel if Older"
         # If no new download to process, cancel here
-        uses: andymckay/cancel-action@0.2
+        uses: andymckay/cancel-action@0.3
         if: steps.check_download.outputs.files_exists == 'false'
 
       - name: "Unzip Download"
@@ -48,7 +48,7 @@ jobs:
           unzip -p RebornBuddy64.zip GreyMagic.dll > extracted/GreyMagic.dll
 
       - name: "Download Assembly Stripper"
-        uses: "robinraju/release-downloader@v1"
+        uses: "robinraju/release-downloader@v1.7"
         with:
           repository: "TheManta/AssemblyStripper"
           tag: "v0.1.0"
@@ -91,7 +91,7 @@ jobs:
       - name: "Store ETags"
         # Store download ETags for comparison next run
         # This is at the very end so a version isn't skipped if something broke after saving
-        uses: "actions/upload-artifact@v2"
+        uses: "actions/upload-artifact@v3"
         with:
           name: "etags"
           path: etags
